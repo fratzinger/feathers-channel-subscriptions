@@ -18,6 +18,9 @@
     "lib/**",
     "dist/**"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "prepublish": "npm run compile",
     "compile": "shx rm -rf dist/ && tsc",
