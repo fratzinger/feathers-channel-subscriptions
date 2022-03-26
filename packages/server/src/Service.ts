@@ -51,7 +51,7 @@ export class ServiceChannelSubscriptions {
     return data;
   }
 
-  async remove(id: NullableId, params: Params) {
+  async remove(id: NullableId, params?: Params) {
     const { id: connId } = this.getConnectionId({ params, id });
     if (!connId) { return; }
 

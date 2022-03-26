@@ -8,7 +8,7 @@ import io from "socket.io-client";
 import { nanoid } from "nanoid";
 
 // @ts-ignore
-import { makeFilterChannels, ServiceChannelSubscriptions } from "@feathers-channel-subscriptions/server";
+import { configureChannels, ServiceChannelSubscriptions } from "@feathers-channel-subscriptions/server";
 
 export default () => {
   const app = express(feathers());
@@ -19,19 +19,14 @@ export default () => {
   app.configure(express.rest());
   app.configure(socketioServer());
 
-  app.configure(socketioServer(function(io) {
-    io.use((socket: any, next) => {
-      socket.feathers.id = nanoid();
-      next();
-    });
-  }));
+  app.configure(socketioServer());
 
   app.on("connection", (connection: unknown): void => {
     // On a new real-time connection, add it to the anonymous channel
     app.channel("anonymous").join(connection);
   });
 
-  const filterChannels = makeFilterChannels(app, { subscriptionServicePath: "subscriptions" });
+  const filterChannels = configureChannels(app, { subscriptionServicePath: "subscriptions" });
 
   app.publish((data: any, context: HookContext) => {
     const channel = filterChannels(data, context);

@@ -4,12 +4,12 @@ import { Application, HookContext } from "@feathersjs/feathers";
 
 import "@feathersjs/transport-commons";
 import { ServiceChannelSubscriptions } from "../Service";
+import { ChannelSubscriptionOptions } from "../types";
 
-type ChannelSubscriptionOptions = {
-  subscriptionServicePath: string
-}
-
-export function makeFilterChannels (app: Application, options: ChannelSubscriptionOptions) {
+export function makeFilterChannels (
+  app: Application, 
+  options: ChannelSubscriptionOptions
+) {
   const filterChannelsBySubscriptions = (
     data: any,
     context: HookContext,
