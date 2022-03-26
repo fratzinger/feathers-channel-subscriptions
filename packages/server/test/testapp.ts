@@ -7,7 +7,7 @@ import socketioClient from "@feathersjs/socketio-client";
 import io from "socket.io-client";
 import { nanoid } from "nanoid";
 
-import { configureChannels, ServiceChannelSubscriptions, makeIoId } from "../src";
+import { configureChannels, ServiceChannelSubscriptions } from "../src";
 
 export default () => {
   const app = express(feathers());
@@ -18,7 +18,7 @@ export default () => {
   app.configure(express.rest());
   app.configure(socketioServer());
 
-  app.configure(socketioServer(makeIoId()));
+  app.configure(socketioServer());
 
   app.configure(socketioServer());
 
