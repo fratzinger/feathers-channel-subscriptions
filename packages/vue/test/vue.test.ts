@@ -1,7 +1,6 @@
 import { addClient, globalStores } from "../src/index";
 import TestComponent from "./TestComponent.vue";
 import makeTestApp from "./testapp";
-import { defineComponent } from "vue";
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 

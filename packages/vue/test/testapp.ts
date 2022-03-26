@@ -5,7 +5,6 @@ import express from "@feathersjs/express";
 import socketioServer from "@feathersjs/socketio";
 import socketioClient from "@feathersjs/socketio-client";
 import io from "socket.io-client";
-import { nanoid } from "nanoid";
 
 // @ts-ignore
 import { configureChannels, ServiceChannelSubscriptions } from "@feathers-channel-subscriptions/server";

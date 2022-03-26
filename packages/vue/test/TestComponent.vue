@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useServiceSubscriptions } from "../src/index";
-useServiceSubscriptions({ serverAlias: "api", servicePath: "users" })
+import { useServiceSubscription } from "../src/index";
+useServiceSubscription({ serverAlias: "api", servicePath: "users" })
 </script>
 
 <template>

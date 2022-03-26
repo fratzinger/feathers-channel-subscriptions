@@ -1,4 +1,4 @@
-export type UseServiceSubscriptionsOptions = {
+export type UseServiceSubscriptionOptions = {
   serverAlias: string
   servicePath: string
 }
