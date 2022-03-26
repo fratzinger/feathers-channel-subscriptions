@@ -121,3 +121,7 @@ $RECYCLE.BIN/
 packages/*/dist
 
 .temp
+
+lerna-debug.log
+
+.env
