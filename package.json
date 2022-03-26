@@ -1,0 +1,25 @@
+{
+  "name": "feathers-channel-subscriptions",
+  "description": "",
+  "author": "fratzinger",
+  "private": true,
+  "homepage": "https://github.com/fratzinger/feathers-channel-subscriptions",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fratzinger/feathers-channel-subscriptions"
+  },
+  "license": "MIT",
+  "scripts": {
+    "install": "lerna bootstrap",
+    "build": "lerna run build",
+    "test": "lerna run test",
+    "coverage": "nyc npm run test",
+    "publish": "npm run tsc && lerna publish",
+    "clean": "find . -name node_modules -exec rm -rf '{}' + && find . -name package-lock.json -exec rm -rf '{}' +"
+  },
+  "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "lerna": "^4.0.0",
+    "nyc": "^15.1.0"
+  }
+}
