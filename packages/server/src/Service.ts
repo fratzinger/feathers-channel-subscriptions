@@ -1,11 +1,9 @@
-import _get from "lodash/get";
-
 import type { ServiceChannelSubscriptionsOptions } from "./types";
 import type { Application, Id, NullableId, Params } from "@feathersjs/feathers";
 
 const defaultOptions: Required<ServiceChannelSubscriptionsOptions> = {
   connectionId: "id"
-}
+};
 
 type Data = {
   servicePath: string | string[]
@@ -29,7 +27,7 @@ export class ServiceChannelSubscriptions {
     this.store = {};
   }
 
-  async find(params: Params) {
+  async find(_params: Params) {
 
   }
 
@@ -38,11 +36,11 @@ export class ServiceChannelSubscriptions {
   }
 
   async create(data: Data, params?: Params) {
-    const { id, connection } = this.getConnectionId({params, data});
+    const { id, connection } = this.getConnectionId({ params, data });
     if (!id) { return undefined; }
     this.store[id] ||= { id, connection, byPaths: {} };
 
-    const paths = (Array.isArray(data.servicePath)) ? data.servicePath : [data.servicePath]
+    const paths = (Array.isArray(data.servicePath)) ? data.servicePath : [data.servicePath];
 
     for (let i = 0, n = paths.length; i < n; i++) {
       const path = paths[i];
@@ -86,7 +84,7 @@ export class ServiceChannelSubscriptions {
       if (isPrefiltered && !connections.includes(connection)) { continue; }
       
       if (byPaths[servicePath]) {
-        result.push(connection)
+        result.push(connection);
       }
     }
 
@@ -99,7 +97,7 @@ export class ServiceChannelSubscriptions {
     id
   }: { params: Params, data?: any, id?: NullableId }): { id: Id, connection: any } | undefined {
     if (!params.connection && !data.connectionId && !id) { return undefined; }
-    let connId = id || params.connection[this.options.connectionId]
+    let connId = id || params.connection[this.options.connectionId];
     if (!connId) { connId = data?.connectionId; }
     return { id: connId, connection: params.connection };
   }

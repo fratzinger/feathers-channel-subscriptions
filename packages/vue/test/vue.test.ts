@@ -1,11 +1,11 @@
 import { addClient, globalStores } from "../src/index";
 import TestComponent from "./TestComponent.vue";
 import makeTestApp from "./testapp";
-import { defineComponent } from "vue"
+import { defineComponent } from "vue";
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-import { mount } from '@vue/test-utils'
+import { mount } from "@vue/test-utils";
 
 test("connects", async function() {
   const { createClient, app } = makeTestApp();
@@ -16,14 +16,7 @@ test("connects", async function() {
 
   assert.ok(globalStores.api);
 
-  const M = {
-    serverAlias: "api",
-    servicePath: "users"
-  }
-
   const wrapper = mount(TestComponent);
-
-  //console.log(wrapper.html());
 
   assert.ok(globalStores.api.hasService("users"));
   assert.strictEqual(globalStores.api.service("users").subscribers, 1);
@@ -32,7 +25,7 @@ test("connects", async function() {
 
   client.service("users").on("created", () => {
     onUsers++;
-  })
+  });
 
   await sleep(200);
 
@@ -51,4 +44,4 @@ test("connects", async function() {
   await sleep(50);
 
   assert.strictEqual(onUsers, 1);
-})
+});

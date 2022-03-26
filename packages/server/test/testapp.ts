@@ -3,7 +3,7 @@ import "@feathersjs/transport-commons";
 import { Service as MemoryService } from "feathers-memory";
 import express from "@feathersjs/express";
 import socketioServer from "@feathersjs/socketio";
-import socketioClient from "@feathersjs/socketio-client"
+import socketioClient from "@feathersjs/socketio-client";
 import io from "socket.io-client";
 import { nanoid } from "nanoid";
 
@@ -12,69 +12,69 @@ import { ServiceChannelSubscriptions } from "../src/Service";
 
 export default () => {
   const app = express(feathers());
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
-    // Set up Plugins and providers
-    app.configure(express.rest());
-    app.configure(socketioServer());
+  // Set up Plugins and providers
+  app.configure(express.rest());
+  app.configure(socketioServer());
 
-    app.configure(socketioServer(function(io) {
-      io.use((socket: any, next) => {
-        socket.feathers.id = nanoid();
-        next();
-      });
-    }));
-
-    app.on("connection", (connection: unknown): void => {
-      // On a new real-time connection, add it to the anonymous channel
-      app.channel("anonymous").join(connection);
+  app.configure(socketioServer(function(io) {
+    io.use((socket: any, next) => {
+      socket.feathers.id = nanoid();
+      next();
     });
+  }));
 
-    const filterChannels = makeFilterChannels(app, { subscriptionServicePath: "subscriptions" })
+  app.on("connection", (connection: unknown): void => {
+    // On a new real-time connection, add it to the anonymous channel
+    app.channel("anonymous").join(connection);
+  });
 
-    app.publish((data: any, context: HookContext) => {
-      return filterChannels(data, context)
-    });
+  const filterChannels = makeFilterChannels(app, { subscriptionServicePath: "subscriptions" });
 
-    const port = 2322
+  app.publish((data: any, context: HookContext) => {
+    return filterChannels(data, context);
+  });
 
-    app.listen(port);
+  const port = 2322;
 
-    app.use("/test", new MemoryService({}));
-    app.use("/users", new MemoryService({}));
+  app.listen(port);
 
-    app.use("/subscriptions", new ServiceChannelSubscriptions(app));
+  app.use("/test", new MemoryService({}));
+  app.use("/users", new MemoryService({}));
 
-    async function createClient() {
-      const socket = io(`http://localhost:${port}`);
-      const client = feathers<{
+  app.use("/subscriptions", new ServiceChannelSubscriptions(app));
+
+  async function createClient() {
+    const socket = io(`http://localhost:${port}`);
+    const client = feathers<{
         test: ServiceAddons<MemoryService>
         users: ServiceAddons<MemoryService>
         subscriptions: ServiceChannelSubscriptions 
       }>();
-      client.configure(socketioClient(socket));
+    client.configure(socketioClient(socket));
 
-      const testClientService = client.service('test');
-      const usersClientService = client.service('users');
-      const subscriptionsClientService = client.service('subscriptions');
+    const testClientService = client.service("test");
+    const usersClientService = client.service("users");
+    const subscriptionsClientService = client.service("subscriptions");
 
-      const p = new Promise<void>((resolve) => {
-        socket.on("connect", () => resolve());
-      });
+    const p = new Promise<void>((resolve) => {
+      socket.on("connect", () => resolve());
+    });
 
-      await p;
+    await p;
 
-      return client;
-    }
+    return client;
+  }
 
-    const subscriptionsService: ServiceChannelSubscriptions = app.service("subscriptions");
+  const subscriptionsService: ServiceChannelSubscriptions = app.service("subscriptions");
 
-    return {
-      app,
-      testService: app.service("test"),
-      usersService: app.service("users"),
-      subscriptionsService,
-      createClient
-    }
-}
+  return {
+    app,
+    testService: app.service("test"),
+    usersService: app.service("users"),
+    subscriptionsService,
+    createClient
+  };
+};
