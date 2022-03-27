@@ -1,5 +1,5 @@
 import assert from "assert";
-import makeTestApp from "./testApp";
+import makeTestApp from "./makeTestApp";
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
