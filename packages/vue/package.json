@@ -1,9 +1,24 @@
 {
   "name": "@feathers-channel-subscriptions/vue",
   "version": "0.1.1",
-  "description": "",
+  "description": "A Vue plugin for Feathers channel subscriptions",
   "author": "fratzinger",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fratzinger/feathers-channel-subscriptions",
+    "directory": "packages/vue"
+  },
+  "keywords": [
+    "feathers",
+    "feathers.js",
+    "feathers-plugin",
+    "channel",
+    "subscriptions",
+    "publish",
+    "subscribe",
+    "vue"
+  ],
   "main": "dist/",
   "types": "dist/",
   "directories": {
@@ -38,7 +53,7 @@
     "@feathersjs/express": "^4.5.12",
     "@feathersjs/socketio": "^4.5.13",
     "@feathersjs/socketio-client": "^4.5.13",
-    "@types/lodash": "^4.14.179",
+    "@types/lodash": "^4.14.180",
     "@types/node": "^16.10.3",
     "@typescript-eslint/eslint-plugin": "^5.16.0",
     "@typescript-eslint/parser": "^5.16.0",
@@ -48,14 +63,13 @@
     "eslint": "^8.12.0",
     "eslint-plugin-vue": "^8.5.0",
     "feathers-memory": "^4.1.0",
-    "happy-dom": "^2.50.0",
     "jsdom": "^19.0.0",
-    "nanoid": "^3.3.1",
     "shx": "^0.3.3",
     "socket.io-client": "^2.4.0",
     "ts-node": "^10.2.1",
     "typescript": "^4.6.3",
     "vitest": "^0.7.11",
     "vue": "^3.2.31"
-  }
+  },
+  "gitHead": "77a6a528bdeda82f73871b881978555bb50fa05b"
 }

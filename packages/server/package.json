@@ -1,9 +1,23 @@
 {
   "name": "@feathers-channel-subscriptions/server",
   "version": "0.1.1",
-  "description": "",
+  "description": "A feathers.js plugin that lets you emit events through channels to subscribers",
   "author": "fratzinger",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fratzinger/feathers-channel-subscriptions",
+    "directory": "packages/server"
+  },
+  "keywords": [
+    "feathers",
+    "feathers.js",
+    "feathers-plugin",
+    "channel",
+    "subscriptions",
+    "publish",
+    "subscribe"
+  ],
   "main": "dist/",
   "types": "dist/",
   "directories": {
@@ -31,7 +45,8 @@
   "dependencies": {
     "@feathersjs/feathers": "^4.5.11",
     "@feathersjs/transport-commons": "^4.5.12",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "nanoid": "^3.3.1"
   },
   "devDependencies": {
     "@feathersjs/express": "^4.5.12",
@@ -46,10 +61,10 @@
     "eslint": "^8.12.0",
     "feathers-memory": "^4.1.0",
     "mocha": "^9.1.2",
-    "nanoid": "^3.3.1",
     "shx": "^0.3.3",
     "socket.io-client": "^2.4.0",
     "ts-node": "^10.2.1",
     "typescript": "^4.6.3"
-  }
+  },
+  "gitHead": "77a6a528bdeda82f73871b881978555bb50fa05b"
 }
