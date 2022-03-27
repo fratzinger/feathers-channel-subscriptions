@@ -1,27 +1,28 @@
 {
   "extends": "@istanbuljs/nyc-config-typescript",
-  "cache": false,
-  "check-coverage": true,
-  "include": [
-    "src/**/*.js",
-    "src/**/*.ts"
+  "verbose": false,
+  "extension": [
+    ".ts",
+    ".tsx",
+    ".js"
   ],
   "exclude": [
-    "src/**/types.ts"
+    "**/test/*",
+    "**/dist/*",
+    "**/*.dist.js",
+    "**/tests/*"
   ],
+  "print": "detail",
   "reporter": [
     "html",
     "text",
     "text-summary",
     "lcov"
   ],
-  "sourceMap": true,
-  "all": true,
-  "instrument": true,
   "watermarks": {
-    "statements": [70, 85],
-    "lines": [70, 85],
-    "functions": [70, 85],
-    "branches": [70, 85]
+    "statements": [70, 90],
+    "lines": [70, 90],
+    "functions": [70, 90],
+    "branches": [70, 90]
   }
 }
