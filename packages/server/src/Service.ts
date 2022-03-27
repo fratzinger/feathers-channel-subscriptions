@@ -1,5 +1,6 @@
 import type { ServiceChannelSubscriptionsOptions } from "./types";
 import type { Application, Id, NullableId, Params } from "@feathersjs/feathers";
+import { Forbidden, NotFound, NotImplemented } from "@feathersjs/errors";
 
 const defaultOptions: Required<ServiceChannelSubscriptionsOptions> = {
   connectionId: "id"
@@ -27,15 +28,20 @@ export class ServiceChannelSubscriptions {
     this.store = {};
   }
 
-  async find(_params: Params) {
+  async _find(_params: Params) {
 
   }
 
-  async get(id: Id, params: Params) {
-    return this.store[id];
+  async _get(id: Id, params: Params) {
+    const storeItem = this.store[id];
+    if (!storeItem) { 
+      throw new NotFound(`No connection with id ${id} found`);
+    }
+
+    return storeItem;
   }
 
-  async create(data: Data, params?: Params) {
+  async _create(data: Data, params?: Params) {
     const { id, connection } = this.getConnectionId({ params, data });
     if (!id) { return undefined; }
     this.store[id] ||= { id, connection, byPaths: {} };
@@ -51,15 +57,28 @@ export class ServiceChannelSubscriptions {
     return data;
   }
 
-  async remove(id: NullableId, params?: Params) {
+  async _update(id: Id, data: Data, params?: Params) {
+    throw new NotImplemented("update not implemented");
+  }
+
+  async _patch(id: NullableId, data: Data, params?: Params) {
+    throw new NotImplemented("patch not implemented");
+  }
+
+  async _remove(id: NullableId, params?: Params) {
+    this.checkConnectionIdMatch(id, params);
     const { id: connId } = this.getConnectionId({ params, id });
     if (!connId) { return; }
+
+    if (id && params.connection?.id && id !== params.connection.id) {
+      throw new Forbidden("You can only remove yourself!");
+    }
 
     const definition = this.store[connId];
 
     if (!definition) { return; }
 
-    if (!params.query.servicePath) {
+    if (!params.query?.servicePath) {
       delete this.store[connId];
     }
 
@@ -72,6 +91,30 @@ export class ServiceChannelSubscriptions {
         delete definition.byPaths[path];
       }
     }
+  }
+
+  find(_params: Params) {
+    return this._find(_params);
+  }
+
+  get(id: Id, params: Params) {
+    return this._get(id, params);
+  }
+
+  create(data: Data, params?: Params) {
+    return this._create(data, params);
+  }
+
+  update(id: Id, data: Data, params?: Params) {
+    return this._update(id, data, params);
+  }
+
+  patch(id: NullableId, data: Data, params?: Params) {
+    return this._patch(id, data, params);
+  }
+
+  remove(id: NullableId, params?: Params) {
+    return this._remove(id, params);
   }
 
   connectionsForServicePath(servicePath: string, connections?: any): any {
@@ -96,9 +139,15 @@ export class ServiceChannelSubscriptions {
     data,
     id
   }: { params: Params, data?: any, id?: NullableId }): { id: Id, connection: any } | undefined {
-    if (!params.connection && !data.connectionId && !id) { return undefined; }
-    let connId = id || params.connection[this.options.connectionId];
+    if (!params.connection && !data?.connectionId && !id) { return undefined; }
+    let connId = id || params.connection?.[this.options.connectionId];
     if (!connId) { connId = data?.connectionId; }
     return { id: connId, connection: params.connection };
+  }
+
+  private checkConnectionIdMatch(id: NullableId, params: Params) {
+    if (id && params.connection?.id && id !== params.connection.id) {
+      throw new Forbidden("You can only remove yourself!");
+    }
   }
 }

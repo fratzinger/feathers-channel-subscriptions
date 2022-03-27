@@ -1,11 +1,11 @@
 import assert from "assert";
-import makeTestApp from "./testapp";
+import makeTestApp from "./testApp";
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 describe("channels.test.ts", function() {
   it("tests", async function() {
-    const { app, subscriptionsService, testService, usersService, createClient } = makeTestApp();
+    const { app, subscriptionsService, testService, usersService, createClient } = await makeTestApp();
 
     const client1 = await createClient();
 
@@ -80,5 +80,53 @@ describe("channels.test.ts", function() {
     await sleep(20);
     assert.strictEqual(onTestCount, 3);
     assert.strictEqual(onUsersCount, 3);
+  });
+
+  it("removes on disconnect", async function() {
+    const { app, subscriptionsService, testService, usersService, createClient } = await makeTestApp();
+
+    const client1 = await createClient();
+
+    await client1.service("subscriptions").create({ servicePath: "test" });
+    await client1.service("subscriptions").create({ servicePath: "users" });
+
+    assert.strictEqual(Object.keys(subscriptionsService.store).length, 1);
+
+    // @ts-ignore
+    await client1.io.disconnect();
+
+    await sleep(20);
+
+    assert.strictEqual(Object.keys(subscriptionsService.store).length, 0);
+  });
+
+  it("client can only remove itself, not another client", async function() {
+    const { app, subscriptionsService, testService, usersService, createClient } = await makeTestApp();
+
+    const client1 = await createClient();
+    const client2 = await createClient();
+
+    await client1.service("subscriptions").create({ servicePath: "test" });
+
+    let connectionIds = Object.keys(subscriptionsService.store);
+
+    assert.strictEqual(connectionIds.length, 1);
+
+    const client1Id = connectionIds[0];
+
+    await client2.service("subscriptions").create({ servicePath: "test" });
+
+    connectionIds = Object.keys(subscriptionsService.store);
+
+    assert.strictEqual(connectionIds.length, 2);
+
+    const client2Id = connectionIds.find(x => x !== client1Id);
+
+    await assert.rejects(
+      () => client1.service("subscriptions").remove(client2Id),
+      (err: any) => err.message === "You can only remove yourself!"
+    );
+
+    assert.strictEqual(Object.keys(subscriptionsService.store).length, 2);
   });
 });

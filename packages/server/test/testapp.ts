@@ -5,21 +5,17 @@ import express from "@feathersjs/express";
 import socketioServer from "@feathersjs/socketio";
 import socketioClient from "@feathersjs/socketio-client";
 import io from "socket.io-client";
-import { nanoid } from "nanoid";
+import getPort from "get-port";
 
 import { configureChannels, ServiceChannelSubscriptions } from "../src";
 
-export default () => {
+export default async () => {
   const app = express(feathers());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
   // Set up Plugins and providers
   app.configure(express.rest());
-  app.configure(socketioServer());
-
-  app.configure(socketioServer());
-
   app.configure(socketioServer());
 
   app.on("connection", (connection: unknown): void => {
@@ -33,7 +29,7 @@ export default () => {
     return filterChannels(data, context);
   });
 
-  const port = 2322;
+  const port = await getPort();
 
   app.listen(port);
 
